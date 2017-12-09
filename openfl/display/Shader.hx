@@ -66,7 +66,7 @@ class Shader {
 		
 		#if emscripten
 		"varying float vAlpha;
-		varying mat4 vColorMultipliers;
+		varying vec4 vColorMultipliers[4];
 		varying vec4 vColorOffsets;
 		varying vec2 vTexCoord;
 		
@@ -83,8 +83,14 @@ class Shader {
 				
 			} else if (uColorTransform) {
 				
+				mat4 colorMultiplier;
+				colorMultiplier[0] = vColorMultipliers[0];
+				colorMultiplier[1] = vColorMultipliers[1];
+				colorMultiplier[2] = vColorMultipliers[2];
+				colorMultiplier[3] = vColorMultipliers[3];
+				
 				color = vec4 (color.rgb / color.a, color.a);
-				color = vColorOffsets + (color * vColorMultipliers);
+				color = vColorOffsets + (color * colorMultiplier);
 				
 				gl_FragColor = vec4 (color.bgr * color.a * vAlpha, color.a * vAlpha);
 				
@@ -97,7 +103,7 @@ class Shader {
 		}"
 		#else
 		"varying float vAlpha;
-		varying mat4 vColorMultipliers;
+		varying vec4 vColorMultipliers[4];
 		varying vec4 vColorOffsets;
 		varying vec2 vTexCoord;
 		
@@ -114,8 +120,14 @@ class Shader {
 				
 			} else if (uColorTransform) {
 				
+				mat4 colorMultiplier;
+				colorMultiplier[0] = vColorMultipliers[0];
+				colorMultiplier[1] = vColorMultipliers[1];
+				colorMultiplier[2] = vColorMultipliers[2];
+				colorMultiplier[3] = vColorMultipliers[3];
+				
 				color = vec4 (color.rgb / color.a, color.a);
-				color = vColorOffsets + (color * vColorMultipliers);
+				color = vColorOffsets + (color * colorMultiplier);
 				
 				if (color.a > 0.0) {
 					
@@ -147,7 +159,7 @@ class Shader {
 		attribute vec4 aPosition;
 		attribute vec2 aTexCoord;
 		varying float vAlpha;
-		varying mat4 vColorMultipliers;
+		varying vec4 vColorMultipliers[4];
 		varying vec4 vColorOffsets;
 		varying vec2 vTexCoord;
 		
@@ -161,7 +173,10 @@ class Shader {
 			
 			if (uColorTransform) {
 				
-				vColorMultipliers = aColorMultipliers;
+				vColorMultipliers[0] = aColorMultipliers[0];
+				vColorMultipliers[1] = aColorMultipliers[1];
+				vColorMultipliers[2] = aColorMultipliers[2];
+				vColorMultipliers[3] = aColorMultipliers[3];
 				vColorOffsets = aColorOffsets;
 				
 			}
